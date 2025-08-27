@@ -51,6 +51,18 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+        /* Style for the Table of Contents links */
+        #content a[href^="#"] {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        #content a[href^="#"]:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -59,13 +71,32 @@
     </div>
 
     <script>
-        // Configure marked.js with the correct options
+        // Create a custom renderer for marked.js
+        const renderer = {
+            link(href, title, text) {
+                const isExternal = href.startsWith('http://') || href.startsWith('https://');
+
+                // If the link is external, add target="_blank" and rel attributes
+                if (isExternal) {
+                    return `<a href="${href}" title="${title}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+                }
+
+                // Otherwise, render a standard link
+                return `<a href="${href}" title="${title}">${text}</a>`;
+            }
+        };
+
+        // Configure marked.js with the custom renderer and other options
         marked.use({
-            gfm: true,        // Enable GitHub Flavored Markdown (for code blocks)
-            breaks: true,     // Convert line breaks to <br> tags
-            headerIds: true   // Generate IDs for headings
+            renderer: renderer,
+            gfm: true,
+            headerIds: true,
+            breaks: true,
+            mangle: false,
+            headerPrefix: ''
         });
 
+        // Fetch and parse the Markdown file
         fetch("wreath_walkthrough.md")
             .then(response => {
                 if (!response.ok) {
@@ -74,9 +105,7 @@
                 return response.text();
             })
             .then(text => {
-                // Convert Markdown to HTML
                 const htmlContent = marked.parse(text);
-                // Insert the HTML into the 'content' div
                 document.getElementById("content").innerHTML = htmlContent;
             })
             .catch(error => {
