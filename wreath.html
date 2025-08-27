@@ -46,6 +46,10 @@
     </div>
 
     <script>
+	marked.use({
+        gfm: true, // This is for GitHub Flavored Markdown
+        headerIds: true // This is the crucial option to create IDs
+    });
         // Use the marked.js library to parse Markdown content
         fetch("wreath_walkthrough.md")
             .then(response => {
