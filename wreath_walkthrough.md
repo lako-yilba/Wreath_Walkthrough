@@ -187,9 +187,7 @@ Once we know which ports are open, we perform a deeper scan:
 
 nmap -p <OPEN_PORTS_COMMA_SEPARATED> -sV -sC -O -oN service_scan.txt <TARGET_IP>
 
-
-
- ```
+```
 
 
 
@@ -446,7 +444,6 @@ Verify the script executes commands as intended.
 
 
 ./CVE-2019-15107.py TARGET_IP
-
 
 
 ```
