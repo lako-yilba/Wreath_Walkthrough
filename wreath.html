@@ -4,39 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wreath Walkthrough Notes</title>
+
     <script src="https://cdn.jsdelivr.net/npm/marked@4.0.10/marked.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             line-height: 1.6;
             background-color: #f4f4f4;
             color: #333;
         }
         .container {
             max-width: 900px;
-            margin: auto;
+            margin: 20px auto;
             background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        /* Style for code blocks and the copy button */
         pre {
-            background: #f4f4f4;
+            background: #282c34;
             padding: 15px;
             border-radius: 5px;
             overflow-x: auto;
+            color: #abb2bf;
+            position: relative;
         }
         code {
-            background: #eee;
-            padding: 2px 5px;
-            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
         }
         pre code {
             padding: 0;
             background: none;
         }
+        /* Style the copy button */
+        .copy-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 4px 8px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            background: #444;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            opacity: 0.8;
+            transition: opacity 0.2s ease-in-out;
+        }
+        .copy-btn:hover {
+            opacity: 1;
+        }
+
         h1, h2, h3 {
             color: #333;
             border-bottom: 1px solid #eee;
@@ -71,24 +99,7 @@
     </div>
 
     <script>
-        // Create a custom renderer for marked.js
-        const renderer = {
-            link(href, title, text) {
-                const isExternal = href.startsWith('http://') || href.startsWith('https://');
-
-                // If the link is external, add target="_blank" and rel attributes
-                if (isExternal) {
-                    return `<a href="${href}" title="${title}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-                }
-
-                // Otherwise, render a standard link
-                return `<a href="${href}" title="${title}">${text}</a>`;
-            }
-        };
-
-        // Configure marked.js with the custom renderer and other options
         marked.use({
-            renderer: renderer,
             gfm: true,
             headerIds: true,
             breaks: true,
@@ -96,7 +107,6 @@
             headerPrefix: ''
         });
 
-        // Fetch and parse the Markdown file
         fetch("wreath_walkthrough.md")
             .then(response => {
                 if (!response.ok) {
@@ -107,6 +117,31 @@
             .then(text => {
                 const htmlContent = marked.parse(text);
                 document.getElementById("content").innerHTML = htmlContent;
+
+                const codeBlocks = document.querySelectorAll('pre > code');
+                codeBlocks.forEach(codeBlock => {
+                    const pre = codeBlock.parentNode;
+                    const button = document.createElement('button');
+                    button.className = 'copy-btn';
+                    button.textContent = 'Copy';
+
+                    button.addEventListener('click', () => {
+                        const codeToCopy = codeBlock.textContent;
+                        navigator.clipboard.writeText(codeToCopy).then(() => {
+                            button.textContent = 'Copied!';
+                            setTimeout(() => {
+                                button.textContent = 'Copy';
+                            }, 2000);
+                        }).catch(err => {
+                            console.error('Could not copy text: ', err);
+                            button.textContent = 'Failed!';
+                            setTimeout(() => {
+                                button.textContent = 'Copy';
+                            }, 2000);
+                        });
+                    });
+                    pre.appendChild(button);
+                });
             })
             .catch(error => {
                 console.error('There was a problem loading the Markdown file:', error);
