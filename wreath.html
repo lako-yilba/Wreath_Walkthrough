@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wreath Walkthrough Notes</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.10/marked.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,22 +33,24 @@
             padding: 2px 5px;
             border-radius: 3px;
         }
+        pre code {
+            padding: 0;
+            background: none;
+        }
         h1, h2, h3 {
             color: #333;
             border-bottom: 1px solid #eee;
             padding-bottom: 5px;
         }
-    /* ... existing styles ... */
-
-    /* Add this to control image size */
-    .container img {
-        max-width: 100%; /* Ensures images don't overflow the container */
-        height: auto;    /* Maintains aspect ratio */
-        display: block;  /* Helps center images if needed */
-        margin: 15px auto; /* Adds some spacing and centers them */
-        border-radius: 5px; /* Optional: adds rounded corners */
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional: subtle shadow */
-    }
+        /* Style for images */
+        .container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 15px auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -57,11 +59,13 @@
     </div>
 
     <script>
-	marked.use({
-        gfm: true, // This is for GitHub Flavored Markdown
-        headerIds: true // This is the crucial option to create IDs
-    });
-        // Use the marked.js library to parse Markdown content
+        // Configure marked.js with the correct options
+        marked.use({
+            gfm: true,        // Enable GitHub Flavored Markdown (for code blocks)
+            breaks: true,     // Convert line breaks to <br> tags
+            headerIds: true   // Generate IDs for headings
+        });
+
         fetch("wreath_walkthrough.md")
             .then(response => {
                 if (!response.ok) {
