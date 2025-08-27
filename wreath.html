@@ -4,91 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wreath Walkthrough Notes</title>
-
     <script src="https://cdn.jsdelivr.net/npm/marked@4.0.10/marked.min.js"></script>
-
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
 
     <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --container-bg: #ffffff;
+            --text-color: #212529;
+            --code-bg: #282c34;
+            --code-color: #abb2bf;
+            --border-color: #dee2e6;
+            --link-color: #007bff;
+            --link-hover-color: #0056b3;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
-            background-color: #f4f4f4;
-            color: #333;
         }
         .container {
             max-width: 900px;
             margin: 20px auto;
-            background: #fff;
-            padding: 20px;
+            padding: 40px;
+            background: var(--container-bg);
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        /* Style for code blocks and the copy button */
+        /* Markdown generated headings */
+        h1, h2, h3, h4, h5, h6 {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.3em;
+            margin-top: 2em;
+            margin-bottom: 1em;
+        }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.8em; }
+        h3 { font-size: 1.5em; }
+
+        /* Code Block Styles */
         pre {
-            background: #282c34;
-            padding: 15px;
-            border-radius: 5px;
+            background: var(--code-bg);
+            color: var(--code-color);
+            padding: 1rem;
+            border-radius: 6px;
             overflow-x: auto;
-            color: #abb2bf;
             position: relative;
         }
         code {
             font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
+            font-size: 0.9em;
         }
+        /* Fix for highlight.js */
         pre code {
-            padding: 0;
             background: none;
+            padding: 0;
         }
-        /* Style the copy button */
         .copy-btn {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            padding: 4px 8px;
+            top: 8px;
+            right: 8px;
+            padding: 4px 10px;
             border: 1px solid #555;
             border-radius: 4px;
             background: #444;
             color: #fff;
             cursor: pointer;
             font-size: 12px;
-            font-family: Arial, sans-serif;
             opacity: 0.8;
             transition: opacity 0.2s ease-in-out;
+            font-family: Arial, sans-serif;
         }
         .copy-btn:hover {
             opacity: 1;
         }
 
-        h1, h2, h3 {
-            color: #333;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-        }
-        /* Style for images */
+        /* Image Styling */
         .container img {
             max-width: 100%;
             height: auto;
             display: block;
-            margin: 15px auto;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 2em auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        /* Style for the Table of Contents links */
+
+        /* TOC Styling */
         #content a[href^="#"] {
-            color: #007bff;
+            color: var(--link-color);
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 500;
             display: block;
             margin-bottom: 5px;
         }
         #content a[href^="#"]:hover {
-            color: #0056b3;
+            color: var(--link-hover-color);
             text-decoration: underline;
         }
     </style>
@@ -99,6 +114,7 @@
     </div>
 
     <script>
+        // Configure marked.js with a custom renderer
         marked.use({
             gfm: true,
             headerIds: true,
@@ -107,6 +123,7 @@
             headerPrefix: ''
         });
 
+        // Fetch and parse the Markdown file
         fetch("wreath_walkthrough.md")
             .then(response => {
                 if (!response.ok) {
@@ -118,29 +135,30 @@
                 const htmlContent = marked.parse(text);
                 document.getElementById("content").innerHTML = htmlContent;
 
-                const codeBlocks = document.querySelectorAll('pre > code');
-                codeBlocks.forEach(codeBlock => {
-                    const pre = codeBlock.parentNode;
+                // Syntax highlighting after content is loaded
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+                
+                // Add copy buttons to code blocks
+                const codeBlocks = document.querySelectorAll('pre');
+                codeBlocks.forEach(pre => {
                     const button = document.createElement('button');
                     button.className = 'copy-btn';
                     button.textContent = 'Copy';
+                    pre.appendChild(button);
 
                     button.addEventListener('click', () => {
-                        const codeToCopy = codeBlock.textContent;
+                        const codeToCopy = pre.querySelector('code').textContent;
                         navigator.clipboard.writeText(codeToCopy).then(() => {
                             button.textContent = 'Copied!';
-                            setTimeout(() => {
-                                button.textContent = 'Copy';
-                            }, 2000);
+                            setTimeout(() => { button.textContent = 'Copy'; }, 2000);
                         }).catch(err => {
                             console.error('Could not copy text: ', err);
                             button.textContent = 'Failed!';
-                            setTimeout(() => {
-                                button.textContent = 'Copy';
-                            }, 2000);
+                            setTimeout(() => { button.textContent = 'Copy'; }, 2000);
                         });
                     });
-                    pre.appendChild(button);
                 });
             })
             .catch(error => {
